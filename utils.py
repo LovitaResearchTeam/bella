@@ -52,7 +52,7 @@ async def get_all_metadatas():
                     ms = json.loads(ms)
                 if 'mint' in ms.keys():
                     mints.append(ms)
-    mint_metadata_uris = [m['mints']['metadata_uri'] for m in mints]
+    mint_metadata_uris = [m['mint']['metadata_uri'] for m in mints]
     mint_metadata_urls = [get_ipfs_from_address(uri) for uri in mint_metadata_uris]
     async def get_data(url: str):
         loop = asyncio.get_event_loop()
