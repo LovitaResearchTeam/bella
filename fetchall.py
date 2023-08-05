@@ -1,4 +1,4 @@
-from utils import fetch_all
+from metadatautils import fetch_all
 import asyncio
 
 async def main():
