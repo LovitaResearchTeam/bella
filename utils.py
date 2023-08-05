@@ -1,4 +1,5 @@
 import asyncio
+import json
 from math import ceil
 import requests
 from consts import CONTRACT_ADDRESS
@@ -35,6 +36,36 @@ async def get_all_contract_txs(pages_no: int=None):
     for task in done:
         pages.append(await task)
     pages.append(first_page)
-    pages.sort(key=lambda p: p['paging']['from'])
     return pages
 
+
+async def get_all_mints():
+    pages = await get_all_contract_txs()
+    mints = []
+    for page in pages:
+        for d in page['data']:
+            for m in d['messages']:
+                ms = m['value']['msg']
+                try:
+                    ms.keys()
+                except:
+                    ms = json.loads(ms)
+                if 'mint' in ms.keys():
+                    mints.append(ms)
+    mint_metadata_uris = [m['mints']['metadata_uri'] for m in mints]
+    mint_metadata_urls = [get_ipfs_from_address(uri) for uri in mint_metadata_uris]
+    async def get_data(url: str):
+        loop = asyncio.get_event_loop()
+        def get_response():
+            response = requests.get(url)
+            return response
+        response_future = loop.run_in_executor(None, get_response)
+        response = await response_future
+        return response.json()
+    coroutines = [get_data(url) for url in mint_metadata_urls]
+    tasks = [asyncio.create_task(coro) for coro in coroutines]
+    done, _ = await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+    metadatas = []
+    for task in done:
+        metadatas.append(await task)
+    return metadatas
