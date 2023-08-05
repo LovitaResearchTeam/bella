@@ -1,4 +1,4 @@
-from metadatautils import fetch_medias_from_metadata
+from utils import fetch_medias_from_metadata
 import asyncio
 
 async def main():
