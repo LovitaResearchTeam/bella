@@ -109,6 +109,7 @@ async def download_media(url: str, number: int):
         response = requests.get(url, stream=True)
         with open(f'media/#{number}.jpg', 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
+        return
     download_future = loop.run_in_executor(None, get_media_from_address)
     await download_future
     return
