@@ -12,7 +12,7 @@ def get_ipfs_from_address(ipfs_address: str) -> str:
     return ipfs_address.replace("ipfs://", "https://ipfs.io/ipfs/")
 
 
-async def get_contract_txs_with_skip(skip: int=0):
+async def retreive_contract_txs_with_skip(skip: int=0):
     url = "https://products.exchange.grpc-web.injective.network/api/explorer/v1/contractTxs/" + CONTRACT_ADDRESS
     params = {"skip": skip} if skip else {}
     loop = asyncio.get_event_loop()
@@ -24,15 +24,15 @@ async def get_contract_txs_with_skip(skip: int=0):
     return response.json()
 
 
-async def get_all_contract_txs(pages_no: int=None):
-    first_page = await get_contract_txs_with_skip()
+async def retreive_all_contract_txs(pages_no: int=None):
+    first_page = await retreive_contract_txs_with_skip()
     total = first_page['paging']['total']
     number_of_pages = ceil(total/100) - 1
     if pages_no is None:
         pages_no = number_of_pages
     pages = []
 
-    coroutines = [get_contract_txs_with_skip(100*i) for i in range(number_of_pages, number_of_pages - pages_no, -1)]
+    coroutines = [retreive_contract_txs_with_skip(100*i) for i in range(number_of_pages, number_of_pages - pages_no, -1)]
     tasks = [asyncio.create_task(coro) for coro in coroutines]
     done, _ = await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
 
@@ -43,7 +43,7 @@ async def get_all_contract_txs(pages_no: int=None):
 
 
 async def get_all_metadatas():
-    pages = await get_all_contract_txs()
+    pages = await retreive_all_contract_txs()
     mints = []
     for page in pages:
         for d in page['data']:
