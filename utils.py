@@ -76,7 +76,7 @@ async def get_all_metadatas():
 
 async def fetch_metadats():
     metadata_dict = {}
-    metadatas = await fetch_metadats()
+    metadatas = await get_all_metadatas()
     pattern = r'#(\d+)'
     for metadata in metadatas:
         match = re.search(pattern, metadata['title'])
