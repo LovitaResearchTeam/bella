@@ -39,7 +39,7 @@ async def get_all_contract_txs(pages_no: int=None):
     return pages
 
 
-async def get_all_mints():
+async def get_all_metadatas():
     pages = await get_all_contract_txs()
     mints = []
     for page in pages:
