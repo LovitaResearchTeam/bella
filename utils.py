@@ -1,8 +1,11 @@
 import asyncio
+import os
+import re
 import json
 from math import ceil
 import requests
 from consts import CONTRACT_ADDRESS
+import shutil
 
 
 def get_ipfs_from_address(ipfs_address: str) -> str:
@@ -69,3 +72,59 @@ async def get_all_metadatas():
     for task in done:
         metadatas.append(await task)
     return metadatas
+
+
+async def fetch_metadats():
+    metadata_dict = {}
+    metadatas = await fetch_metadats()
+    pattern = r'#(\d+)'
+    for metadata in metadatas:
+        match = re.search(pattern, metadata['title'])
+        if match:
+            number = match.group(1)
+        else:
+            print(metadata)
+            raise Exception("number can't be derived")
+        metadata_dict[number] = {
+            'title': metadata['title'],
+            'description': metadata['description'],
+            'rare_parameteres': {
+                'background': metadata['background'],
+                'face': metadata['face'],
+                'body': metadata['body'],
+                'weapon': metadata['weapon'],
+                'head': metadata['head'],
+                'necklace': metadata['necklace'],
+            },
+            'media': get_ipfs_from_address(metadata['media']),
+            'tags': metadata['tags']
+        }
+    with open("metadata.json", 'w') as f:
+        json.dump(metadata_dict, f)
+
+
+async def download_media(url: str, number: int):
+    loop = asyncio.get_event_loop()
+    async def download():
+        response = requests.get(url, stream=True)
+        with open(f'media/#{number}.jpg', 'wb') as out_file:
+            shutil.copyfileobj(response.raw, out_file)
+    download_future = loop.run_in_executor(None, download)
+    await download_future
+
+
+async def fetch_medias_from_metadata():
+    if 'media' not in os.listdir():
+        os.mkdir('media')
+    with open("metadata.json") as f:
+        metadata_dict = json.load(f)
+        coroutines = [download_media(metadata['media'], number) for number, metadata in metadata_dict.items()]
+        tasks = [asyncio.create_task(coro) for coro in coroutines]
+        done, _ = await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+        for task in done:
+            await task
+
+
+async def fetch_all():
+    await fetch_metadats()
+    await fetch_medias_from_metadata()
