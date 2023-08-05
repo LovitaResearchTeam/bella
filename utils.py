@@ -35,5 +35,6 @@ async def get_all_contract_txs(pages_no: int=None):
     for task in done:
         pages.append(await task)
     pages.append(first_page)
+    pages.sort(key=lambda p: p['paging']['from'])
     return pages
 
