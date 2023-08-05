@@ -26,21 +26,9 @@ async def get_all_contract_txs(pages_no: int=None):
     number_of_pages = ceil(total/100) - 1
     if pages_no is None:
         pages_no = number_of_pages
-    pages = [first_page]
-    for i in range(number_of_pages - 1, number_of_pages - pages_no - 1, -1):
-        pages.append(await get_contract_txs_with_skip(100*i))
-    return pages
-
-
-async def get_all_contract_txs2(pages_no: int=None):
-    first_page = await get_contract_txs_with_skip()
-    total = first_page['paging']['total']
-    number_of_pages = ceil(total/100) - 1
-    if pages_no is None:
-        pages_no = number_of_pages
     pages = []
 
-    coroutines = [get_contract_txs_with_skip(100*i) for i in range(number_of_pages - 1, number_of_pages - pages_no - 1, -1)]
+    coroutines = [get_contract_txs_with_skip(100*i) for i in range(number_of_pages, number_of_pages - pages_no, -1)]
     tasks = [asyncio.create_task(coro) for coro in coroutines]
     done, _ = await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
 
@@ -49,14 +37,3 @@ async def get_all_contract_txs2(pages_no: int=None):
     pages.append(first_page)
     return pages
 
-
-async def get_all_contract_txs3(pages_no: int=None):
-    first_page = await get_contract_txs_with_skip()
-    total = first_page['paging']['total']
-    number_of_pages = ceil(total/100) - 1
-    if pages_no is None:
-        pages_no = number_of_pages
-    coroutines = [get_contract_txs_with_skip(100*i) for i in range(number_of_pages - 1, number_of_pages - pages_no - 1, -1)]
-    pages = [await coro async for coro in coroutines]
-    pages.append(first_page)
-    return pages
