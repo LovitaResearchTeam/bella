@@ -111,6 +111,7 @@ async def download_media(url: str, number: int):
             shutil.copyfileobj(response.raw, out_file)
     download_future = loop.run_in_executor(None, get_media_from_address)
     await download_future
+    return
 
 
 async def fetch_medias_from_metadata():
