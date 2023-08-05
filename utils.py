@@ -84,7 +84,7 @@ async def fetch_metadats():
             number = match.group(1)
         else:
             print(metadata)
-            raise Exception("number can't be derived")
+            print("number can't be derived")
         metadata_dict[number] = {
             'title': metadata['title'],
             'description': metadata['description'],
