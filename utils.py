@@ -105,11 +105,11 @@ async def fetch_metadats():
 
 async def download_media(url: str, number: int):
     loop = asyncio.get_event_loop()
-    async def download():
+    async def get_media_from_address():
         response = requests.get(url, stream=True)
         with open(f'media/#{number}.jpg', 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
-    download_future = loop.run_in_executor(None, download)
+    download_future = loop.run_in_executor(None, get_media_from_address)
     await download_future
 
 
