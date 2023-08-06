@@ -1,4 +1,4 @@
-from telegram import Update
+from telegram import PraseMode, Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 import pandas as pd
@@ -14,11 +14,11 @@ async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = context.args
     if not args:
-        df = pd.read_csv('rarity.csv')
-        df.sort_values("total", inplace=True)
+        rarity_df = pd.read_csv('rarity.csv')
+        rarity_df.sort_values("total", inplace=True)
         msg = "Rarest Ninjas: \n\n"
         for i in range(10):
-            row = df.iloc[i]
+            row = rarity_df.iloc[i]
             msg += f"{i+1}. Ninja #{row['number']} : {round(row['total'], 2)}%\n\n"
         await update.message.reply_text(msg)
         return
@@ -29,19 +29,19 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # else
     try:
         number = int(args[0])
-        df = pd.read_csv('rarity.csv')
-        filtered_df = df[df['number'] == number]
+        rarity_df = pd.read_csv('rarity.csv')
+        filtered_df = rarity_df[rarity_df['number'] == number]
         if not len(filtered_df):
             await update.message.reply_text("Ninja number not found. Try another number: ")
             return
         # else
         row = filtered_df.iloc[0]
         with open(f"media/#{number}.jpg", 'rb') as f:
-            caption = f"Ninja #{number}\n\n"
-            caption += f"Total rarity: {round(row['total'], 2)}% (rank={row['rank_total']})\n\n"
+            caption = f"*Ninja #{number}\n\n*"
+            caption += f"*Total rank*: {int(row['rank_total'])}\n\n"
             for col in consts.RARE_COLS:
-                caption += f"{col.capitalize()} : {round(row[col], 2)}% (rank={row[f'rank_{col}']})\n\n"
-            await update.message.reply_photo(f, caption)
+                caption += f"*{col.capitalize()}*\n{row[col]} : {round(row[f'rarity_{col}'], 2)}% (rank={int(row[f'rank_{col}'])})\n\n"
+            await update.message.reply_photo(f, caption, parse_mode=PraseMode.MARKDOWN)
 
     except TypeError:
         await update.message.reply_text("Ninja number not valid. Try again.")
