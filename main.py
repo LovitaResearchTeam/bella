@@ -1,5 +1,6 @@
 from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes, PraseMode
+from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram.constants import ParseMode
 
 import pandas as pd
 
@@ -41,7 +42,7 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             caption += f"*Total rank*: {int(row['rank_total'])}\n\n"
             for col in consts.RARE_COLS:
                 caption += f"*{col.capitalize()}*\n{row[col]} : {round(row[f'rarity_{col}'], 2)}% (rank={int(row[f'rank_{col}'])})\n\n"
-            await update.message.reply_photo(f, caption, parse_mode=PraseMode.MARKDOWN)
+            await update.message.reply_photo(f, caption, parse_mode=ParseMode.MARKDOWN)
 
     except TypeError:
         await update.message.reply_text("Ninja number not valid. Try again.")
