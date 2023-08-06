@@ -12,7 +12,7 @@ async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = "Hi. I'm bella. I can show you how much an NFT is rare. Right now Ninja collection is supported. You can find rarity of a ninja NFT by sending command like below: \n"
     msg += "`/rarityNinja number`\n"
     msg += "Where number is the number of Ninja NFT."
-    await update.message.reply_text(msg)
+    await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
 
 
 
