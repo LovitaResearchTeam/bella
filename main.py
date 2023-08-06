@@ -51,6 +51,7 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     except ValueError:
         title = args[0]
+        rarity_df = pd.read_csv('rarity.csv')
         filtered_df = rarity_df[rarity_df['number'] == title]
         if not len(filtered_df):
             await update.message.reply_text("Ninja title not found. Try another title:")
