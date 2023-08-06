@@ -1,5 +1,5 @@
-from telegram import PraseMode, Update
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes, PraseMode
 
 import pandas as pd
 
