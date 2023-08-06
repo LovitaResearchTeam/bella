@@ -3,3 +3,4 @@ media*
 metadata.json
 __pycache__/
 rarity.csv
+settings.py
