@@ -49,7 +49,7 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 caption += f"*{col.capitalize()}*\n{row[col]} : {round(row[f'rarity_{col}'], 2)}% (rank={int(row[f'rank_{col}'])})\n\n"
             await update.message.reply_photo(f, caption, parse_mode=ParseMode.MARKDOWN)
 
-    except TypeError:
+    except ValueError:
         await update.message.reply_text("Ninja number not valid. Try again.")
         return
 
