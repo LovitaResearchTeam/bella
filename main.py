@@ -22,7 +22,7 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not args:
         msg = "Hey SER. To use this bot you need to call this command like below:\n\n"
         msg += "`/rarityNinja <ninja number or custom title>`"
-        await update.message.reply_text(msg)
+        await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
         return
     # else
     # if len(args) > 1:
