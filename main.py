@@ -19,7 +19,7 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         msg = "Rarest Ninjas: \n\n"
         for i in range(10):
             row = df.iloc[i]
-            msg += f"{i+1}. Ninja #{row['number']} : {round(row['total'], 2)}%"
+            msg += f"{i+1}. Ninja #{row['number']} : {round(row['total'], 2)}%\n\n"
         await update.message.reply_text(msg)
         return
     # else
