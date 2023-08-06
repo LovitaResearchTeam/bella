@@ -2,3 +2,4 @@ test*
 media*
 metadata.json
 __pycache__/
+rarity.csv

@@ -136,11 +136,13 @@ async def fetch_data():
 def fetch_rarities():
     with open("metadata.json") as f:
         metadata_dict = json.load(f)
-    cols = ['number' ,'background', 'face', 'body', 'weapon', 'head', 'necklace']
+    rare_cols = ['background', 'face', 'body', 'weapon', 'head', 'necklace']
+    cols = ['number'] + rare_cols
     metadata_df = pd.DataFrame([[k, *v['rare_parameteres'].values()] for k, v in metadata_dict.items()], columns=cols)
 
     rarity_df = pd.DataFrame()
     rarity_df['number'] = metadata_df['number']
-    for col in ['background', 'face', 'body', 'weapon', 'head', 'necklace']:
+    for col in rare_cols:
         rarity_df[col] = metadata_df[col].map(metadata_df[col].value_counts(normalize=True)) * 100
-    rarity_df.to_csv("rarity.csv")
+    rarity_df = rarity_df.assign(total=lambda x: sum(x[col] for col in rare_cols)/len(rare_cols))
+    rarity_df.to_csv("rarity.csv", index=False)
