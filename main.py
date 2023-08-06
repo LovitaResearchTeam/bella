@@ -9,7 +9,11 @@ from settings import TELEGRAM_TOKEN
 
 
 async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    pass
+    msg = "Hi. I'm bella. I can show you how much an NFT is rare. Right now Ninja collection is supported. You can find rarity of a ninja NFT by sending command like below: \n"
+    msg += "`/rarityNinja number`\n"
+    msg += "Where number is the number of Ninja NFT."
+    await update.message.reply_text(msg)
+
 
 
 async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -49,11 +53,9 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
 
-
-
 if __name__ == "__main__":
     app = Application.builder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler('start', start_cmd))
-    app.add_handler(CommandHandler('rarity', rarity_cmd))
+    app.add_handler(CommandHandler('rarityNinja', rarity_cmd))
 
     app.run_polling()
