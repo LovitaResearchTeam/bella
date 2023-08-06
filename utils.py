@@ -146,6 +146,6 @@ def fetch_rarities():
         rarity_df[col] = metadata_df[col]
         rarity_df[f"rarity_{col}"] = metadata_df[col].map(metadata_df[col].value_counts(normalize=True)) * 100
         rarity_df[f"rank_{col}"] = rarity_df[f"rarity_{col}"].rank(method='min')
-    rarity_df = rarity_df.assign(total=lambda x: sum(x[col] for col in RARE_COLS)/len(RARE_COLS))
+    rarity_df = rarity_df.assign(total=lambda x: sum(x[f'rarity_{col}'] for col in RARE_COLS)/len(RARE_COLS))
     rarity_df['rank_total'] = rarity_df['total'].rank(method='min')
     rarity_df.to_csv("rarity.csv", index=False)
