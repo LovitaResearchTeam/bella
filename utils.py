@@ -6,6 +6,7 @@ from math import ceil
 import requests
 from consts import CONTRACT_ADDRESS
 import shutil
+import pandas as pd
 
 
 def get_ipfs_from_address(ipfs_address: str) -> str:
@@ -127,6 +128,19 @@ async def fetch_medias_from_metadata():
             await task
 
 
-async def fetch_all():
+async def fetch_data():
     await fetch_metadats()
     await fetch_medias_from_metadata()
+
+
+def fetch_rarities():
+    with open("metadata.json") as f:
+        metadata_dict = json.load(f)
+    cols = ['number' ,'background', 'face', 'body', 'weapon', 'head', 'necklace']
+    metadata_df = pd.DataFrame([[k, *v['rare_parameteres'].values()] for k, v in metadata_dict.items()], columns=cols)
+
+    rarity_df = pd.DataFrame()
+    rarity_df['number'] = metadata_df['number']
+    for col in ['background', 'face', 'body', 'weapon', 'head', 'necklace']:
+        rarity_df[col] = metadata_df[col].map(metadata_df[col].value_counts(normalize=True)) * 100
+    rarity_df.to_csv("rarity.csv")

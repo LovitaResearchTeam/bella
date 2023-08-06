@@ -1,3 +1,4 @@
 test*
 media*
 metadata.json
+__pycache__/
