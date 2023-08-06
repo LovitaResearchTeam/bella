@@ -29,9 +29,9 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(msg)
         return
     # else
-    if len(args) > 1:
-        await update.message.reply_text("You should pass one argument : Ninja number")
-        return
+    # if len(args) > 1:
+    #     await update.message.reply_text("You should pass one argument : Ninja number")
+    #     return
     # else
     try:
         number = args[0]
@@ -50,7 +50,7 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_photo(f, caption, parse_mode=ParseMode.MARKDOWN)
 
     except ValueError:
-        title = args[0]
+        title = " ".join(args)
         rarity_df = pd.read_csv('rarity.csv')
         filtered_df = rarity_df[rarity_df['number'] == title]
         if not len(filtered_df):
