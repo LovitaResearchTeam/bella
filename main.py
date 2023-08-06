@@ -57,7 +57,7 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("Ninja title not found. Try another title:")
             return
         row = filtered_df.iloc[0]
-        with open(f"media/{title}.jpg", 'rb') as f:
+        with open(f"media/#{title}.jpg", 'rb') as f:
             caption = f"*{title}\n\n*"
             caption += f"*Total rank*: {int(row['rank_total'])}\n\n"
             for col in consts.RARE_COLS:
