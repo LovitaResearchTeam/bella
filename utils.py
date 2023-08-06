@@ -83,32 +83,44 @@ async def fetch_metadats():
         match = re.search(pattern, metadata['title'])
         if match:
             number = match.group(1)
+            metadata_dict[number] = {
+                'title': metadata['title'],
+                'description': metadata['description'],
+                'rare_parameteres': {
+                    'background': metadata['background'],
+                    'face': metadata['face'],
+                    'body': metadata['body'],
+                    'weapon': metadata['weapon'],
+                    'head': metadata['head'],
+                    'necklace': metadata['necklace'],
+                },
+                'media': get_ipfs_from_address(metadata['media']),
+                'tags': metadata['tags']
+            }
         else:
-            print(metadata)
-            print("number can't be derived")
-        metadata_dict[number] = {
-            'title': metadata['title'],
-            'description': metadata['description'],
-            'rare_parameteres': {
-                'background': metadata['background'],
-                'face': metadata['face'],
-                'body': metadata['body'],
-                'weapon': metadata['weapon'],
-                'head': metadata['head'],
-                'necklace': metadata['necklace'],
-            },
-            'media': get_ipfs_from_address(metadata['media']),
-            'tags': metadata['tags']
-        }
+            metadata_dict[metadata['title']] = {
+                'title': metadata['title'],
+                'description': metadata['description'],
+                'rare_parameteres': {
+                    'background': metadata['background'],
+                    'face': metadata['face'],
+                    'body': metadata['body'],
+                    'weapon': metadata['weapon'],
+                    'head': metadata['head'],
+                    'necklace': metadata['necklace'],
+                },
+                'media': get_ipfs_from_address(metadata['media']),
+                'tags': metadata['tags']
+            }
     with open("metadata.json", 'w') as f:
         json.dump(metadata_dict, f)
 
 
-async def download_media(url: str, number: int):
+async def download_media(url: str, name: str):
     loop = asyncio.get_event_loop()
     def get_media_from_address():
         response = requests.get(url, stream=True)
-        with open(f'media/#{number}.jpg', 'wb') as out_file:
+        with open(f'media/#{name}.jpg', 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
         return
     download_future = loop.run_in_executor(None, get_media_from_address)
@@ -121,7 +133,7 @@ async def fetch_medias_from_metadata():
         os.mkdir('media')
     with open("metadata.json") as f:
         metadata_dict = json.load(f)
-        coroutines = [download_media(metadata['media'], number) for number, metadata in metadata_dict.items()]
+        coroutines = [download_media(metadata['media'], name) for name, metadata in metadata_dict.items()]
         tasks = [asyncio.create_task(coro) for coro in coroutines]
         done, _ = await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
         for task in done:
