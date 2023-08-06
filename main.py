@@ -17,9 +17,9 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         df = pd.read_csv('rarity.csv')
         df.sort_values("total", inplace=True)
         msg = "Rarest Ninjas: \n\n"
-        for i, row in enumerate(df.iloc[:10], start=1):
-            print(row)
-            msg += f"{i}. Ninja #{row['number']} : {round(row['total'], 2)}%"
+        for i in range(10):
+            row = df.iloc[i]
+            msg += f"{i+1}. Ninja #{row['number']} : {round(row['total'], 2)}%"
         await update.message.reply_text(msg)
         return
     # else
