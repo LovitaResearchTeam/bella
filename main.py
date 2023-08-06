@@ -34,7 +34,7 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     # else
     try:
-        number = int(args[0])
+        number = args[0]
         rarity_df = pd.read_csv('rarity.csv')
         filtered_df = rarity_df[rarity_df['number'] == number]
         if not len(filtered_df):
