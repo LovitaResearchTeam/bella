@@ -3,6 +3,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 
 import pandas as pd
 
+import consts
 from settings import TELEGRAM_TOKEN
 
 
@@ -34,6 +35,12 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return
         # else
         row = filtered_df.iloc[0]
+        with open(f"media/#{number}.jpg", 'rb') as f:
+            caption = f"Ninja #{number}\n\n"
+            caption += f"Total rarity: {round(row['total'], 2)}% (rank={row['rank_total']})\n\n"
+            for col in consts.RARE_COLS:
+                caption += f"{col.capitalize()} : {round(row[col], 2)}% (rank={row[f'rank_{col}']})\n\n"
+            await update.message.reply_photo(f, caption)
 
     except TypeError:
         await update.message.reply_text("Ninja number not valid. Try again.")
