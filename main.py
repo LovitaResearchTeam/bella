@@ -50,8 +50,18 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_photo(f, caption, parse_mode=ParseMode.MARKDOWN)
 
     except ValueError:
-        await update.message.reply_text("Ninja number not valid. Try again.")
-        return
+        title = args[0]
+        filtered_df = rarity_df[rarity_df['number'] == title]
+        if not len(filtered_df):
+            await update.message.reply_text("Ninja title not found. Try another title:")
+            return
+        row = filtered_df.iloc[0]
+        with open(f"media/{title}.jpg", 'rb') as f:
+            caption = f"*{title}\n\n*"
+            caption += f"*Total rank*: {int(row['rank_total'])}\n\n"
+            for col in consts.RARE_COLS:
+                caption += f"*{col.capitalize()}*\n{row[col]} : {round(row[f'rarity_{col}'], 2)}% (rank={int(row[f'rank_{col}'])})\n\n"
+            await update.message.reply_photo(f, caption, parse_mode=ParseMode.MARKDOWN)
 
 
 if __name__ == "__main__":
