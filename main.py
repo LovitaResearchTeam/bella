@@ -77,6 +77,7 @@ Floor Price: {floor_price}
 
 Vol. /7d: {vol_in_7_days}
 """
+    return msg
 
 
 if __name__ == "__main__":
