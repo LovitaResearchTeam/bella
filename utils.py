@@ -161,3 +161,21 @@ def fetch_rarities():
     rarity_df = rarity_df.assign(total=lambda x: sum(x[f'rarity_{col}'] for col in RARE_COLS)/len(RARE_COLS))
     rarity_df['rank_total'] = rarity_df['total'].rank(method='min')
     rarity_df.to_csv("rarity.csv", index=False)
+
+
+def get_collection_data():
+    url = 'https://injective.talis.art/api/graphql'
+    data = {
+        'operationName': 'GetCollectionStats',
+        'variables': {
+            'input': {
+                'id': '648de728463a4965932b2bb0',
+                'env': 'mainnet',
+                'chain': 'injective'
+            }
+        },
+        'query': 'query GetCollectionStats($input: CollectionStatsInput!) {\n  collectionStats(input: $input) {\n    ownerCount\n    tokenCount\n    floorPrice\n    ceilingPrice\n    volumeInLast7Days\n    doesCurrentUserOwnAllTokens\n    __typename\n  }\n}'
+    }
+
+    response = requests.post(url, json=data)
+    return response.json()['data']['collectionStats']
