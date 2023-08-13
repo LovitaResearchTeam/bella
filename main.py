@@ -6,6 +6,7 @@ import pandas as pd
 
 import consts
 from settings import TELEGRAM_TOKEN
+from utils import get_collection_data
 
 
 async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -21,14 +22,10 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = context.args
     if not args:
         msg = "Hey SER. To use this bot you need to call this command like below:\n\n"
-        msg += "`/rarityNinja <ninja number or custom title>`"
+        msg += "`/rarityNinja <ninja number or custom title>`\n"
+        msg += get_collection_stats_msg()
         await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
         return
-    # else
-    # if len(args) > 1:
-    #     await update.message.reply_text("You should pass one argument : Ninja number")
-    #     return
-    # else
     try:
         int(args[0])
         number = args[0]
@@ -37,13 +34,14 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not len(filtered_df):
             await update.message.reply_text("Ninja number not found. Try another number: ")
             return
-        # else
         row = filtered_df.iloc[0]
         with open(f"media/#{number}.jpg", 'rb') as f:
-            caption = f"*Ninja #{number}\n\n*"
+            caption = f"🥷 *Ninja #{number}\n\n*"
             caption += f"*Total rank*: {int(row['rank_total'])}\n\n"
             for col in consts.RARE_COLS:
                 caption += f"*{col.capitalize()}*\n{row[col]} : {round(row[f'rarity_{col}'], 2)}% (rank={int(row[f'rank_{col}'])})\n\n"
+            caption += "\n"
+            caption += get_collection_stats_msg()
             await update.message.reply_photo(f, caption, parse_mode=ParseMode.MARKDOWN)
 
     except ValueError:
@@ -60,6 +58,26 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             for col in consts.RARE_COLS:
                 caption += f"*{col.capitalize()}*\n{row[col]} : {round(row[f'rarity_{col}'], 2)}% (rank={int(row[f'rank_{col}'])})\n\n"
             await update.message.reply_photo(f, caption, parse_mode=ParseMode.MARKDOWN)
+    
+
+def get_collection_stats_msg():
+    col_data = get_collection_data()
+    floor_price = round(col_data['floorPrice'] * 10**(-18), 2)
+    owner_count = col_data['ownerCount']
+    token_count = col_data['tokenCount']
+    vol_in_7_days = round(col_data['volumeInLast7Days'] * 10**(-18), 2)
+    msg = f"""
+🟦 *Collection Data*
+
+*NFTs*: {token_count}
+
+*Owners*: {owner_count}
+
+*Floor Price*: {floor_price} INJ
+
+*Volume In 7 Day*: {vol_in_7_days} INJ
+"""
+    return msg
 
 
 if __name__ == "__main__":
