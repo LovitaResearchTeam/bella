@@ -62,7 +62,7 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def get_collection_stats_msg():
     col_data = get_collection_data()
-    floor_price = round(col_data['floorPrice'] * 10**(-12), 2)
+    floor_price = round(col_data['floorPrice'] * 10**(-18), 2)
     owner_count = col_data['ownerCount']
     token_count = col_data['tokenCount']
     vol_in_7_days = round(col_data['volumeInLast7Days'] * 10**(-18), 2)
@@ -73,9 +73,9 @@ NFTs: {token_count}
 
 Owners: {owner_count}
 
-Floor Price: {floor_price}
+Floor Price: {floor_price} INJ
 
-Vol. /7d: {vol_in_7_days}
+Volume In 7 Day: {vol_in_7_days} INJ
 """
     return msg
 
