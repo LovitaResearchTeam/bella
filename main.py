@@ -53,10 +53,12 @@ async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return
         row = filtered_df.iloc[0]
         with open(f"media/#{title}.jpg", 'rb') as f:
-            caption = f"*{title}\n\n*"
+            caption = f"🥷 *{title}\n\n*"
             caption += f"*Total rank*: {int(row['rank_total'])}\n\n"
             for col in consts.RARE_COLS:
                 caption += f"*{col.capitalize()}*\n{row[col]} : {round(row[f'rarity_{col}'], 2)}% (rank={int(row[f'rank_{col}'])})\n\n"
+            caption += "\n"
+            caption += get_collection_stats_msg()
             await update.message.reply_photo(f, caption, parse_mode=ParseMode.MARKDOWN)
     
 
