@@ -69,13 +69,13 @@ def get_collection_stats_msg():
     msg = f"""
 🟦 *Collection Data*
 
-NFTs: {token_count}
+*NFTs*: {token_count}
 
-Owners: {owner_count}
+*Owners*: {owner_count}
 
-Floor Price: {floor_price} INJ
+*Floor Price*: {floor_price} INJ
 
-Volume In 7 Day: {vol_in_7_days} INJ
+*Volume In 7 Day*: {vol_in_7_days} INJ
 """
     return msg
 
