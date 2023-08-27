@@ -18,9 +18,11 @@ async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def families_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    name_vol_list = [(fam['name'], round(float(fam['volumeInLast7Days']) * 10**(-18), 2)) for fam in get_getfamilies()['data']['families']['families']]
+    name_vol_list.sort(key=lambda x: -x[1])
     msg = "🌋 *Volumes* 🌋\n\n"
-    for fam in get_getfamilies()['data']['families']['families']:
-        msg += f"*{fam['name']}:* {round(float(fam['volumeInLast7Days']) * 10**(-18), 2)} INJ\n\n"
+    for fam in name_vol_list:
+        msg += f"*{fam[0]}:* {fam[1]} INJ\n\n"
     await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
 
 
