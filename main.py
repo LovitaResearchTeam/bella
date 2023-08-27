@@ -20,7 +20,7 @@ async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def families_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = "🌋 *Volumes* 🌋\n\n"
     for fam in get_getfamilies()['data']['families']['families']:
-        msg += f"*{fam['name']}:* {round(float(fam['volumeInLast7Days']) * 10**(-18), 2)}\n\n"
+        msg += f"*{fam['name']}:* {round(float(fam['volumeInLast7Days']) * 10**(-18), 2)} INJ\n\n"
     await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
 
 
