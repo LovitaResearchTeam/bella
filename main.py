@@ -18,7 +18,7 @@ async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def families_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    msg = "Volumes:\n\n"
+    msg = "🌋 *Volumes* 🌋\n\n"
     for fam in get_getfamilies()['data']['families']['families']:
         msg += f"*{fam['name']}:* {round(float(fam['volumeInLast7Days']) * 10**(-18), 2)}\n\n"
     await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
@@ -92,5 +92,5 @@ if __name__ == "__main__":
     app = Application.builder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler('start', start_cmd))
     app.add_handler(CommandHandler('rarityNinja', rarity_cmd))
-    app.add_handler(CommandHandler('volume', families_cmd))
+    app.add_handler(CommandHandler('famVolumes', families_cmd))
     app.run_polling()
