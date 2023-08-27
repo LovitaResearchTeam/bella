@@ -6,7 +6,7 @@ import pandas as pd
 
 import consts
 from settings import TELEGRAM_TOKEN
-from utils import get_collection_data
+from utils import get_collection_data, get_getfamilies
 
 
 async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -16,6 +16,12 @@ async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg += "Where number is the number of Ninja NFT."
     await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
 
+
+async def families_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = "Volumes:\n\n"
+    for fam in get_getfamilies()['data']['families']['families']:
+        msg += f"*{fam['name']}:* {fam['volumeInLast7Days']}"
+    await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
 
 
 async def rarity_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -86,5 +92,5 @@ if __name__ == "__main__":
     app = Application.builder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler('start', start_cmd))
     app.add_handler(CommandHandler('rarityNinja', rarity_cmd))
-
+    app.add_handler(CommandHandler('volume', families_cmd))
     app.run_polling()
