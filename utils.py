@@ -181,8 +181,6 @@ def get_collection_data():
     }
 
     response = requests.post(url, json=data, headers=headers)
-    print(response)
-    print(response.text)
     return response.json()['data']['collectionStats']
 
 
