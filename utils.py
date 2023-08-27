@@ -179,3 +179,36 @@ def get_collection_data():
 
     response = requests.post(url, json=data)
     return response.json()['data']['collectionStats']
+
+
+
+def get_getfamilies():
+    headers = {
+        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+    }
+
+    json_data = {
+        'operationName': 'GetFamilies',
+        'variables': {
+            'input': {
+                'networks': None,
+                'filter': {
+                    'isGeneric': {
+                        'eq': False,
+                    },
+                    'isHidden': {
+                        'eq': False,
+                    },
+                    'isBlocked': {
+                        'eq': False,
+                    },
+                },
+            },
+        },
+        'query': 'query GetFamilies($input: FamiliesInput!) {\n  families(input: $input) {\n    families {\n      id\n      collection_id\n      name\n      artist {\n        id\n        profilePic\n        username\n        isArtist\n        wallet {\n          injAddress\n          __typename\n        }\n        __typename\n      }\n      isGeneric\n      maxSupply\n      miniaturePicture\n      symbol\n      coverPicture\n      mediaType\n      description\n      traits {\n        key\n        values\n        __typename\n      }\n      traits2 {\n        key\n        values {\n          value\n          ratio\n          count\n          __typename\n        }\n        __typename\n      }\n      hasBeenWhitelisted\n      env\n      chain\n      previews {\n        id\n        token_id\n        media\n        mediaThumbnail\n        title\n        mediaType\n        __typename\n      }\n      miniatureDimensions {\n        width\n        height\n        __typename\n      }\n      coverPictureDimensions {\n        width\n        height\n        __typename\n      }\n      tokenCount\n      candy {\n        id\n        name\n        initiator {\n          id\n          __typename\n        }\n        contract\n        price\n        currency\n        limitByWallet\n        limitByTransaction\n        startingDate\n        endingDate\n        reserveTokens\n        randomSeed\n        randomNumberPicked\n        randomSignature\n        lastRandomNumber\n        createdAt\n        updatedAt\n        withdrawnTokens\n        isSoldOut\n        phases {\n          id\n          name\n          startingDate\n          endingDate\n          privacy\n          mintLimit\n          duration\n          __typename\n        }\n        __typename\n      }\n      isHidden\n      isBlocked\n      isPrintEnabled\n      shouldDisplayRarity\n      isBadge\n      badgePicture\n      badgeUri\n      badgeType\n      createdAt\n      updatedAt\n      volumeInLast7Days\n      floorPrice\n      ownerCount\n      totalVolume\n      __typename\n    }\n    count\n    __typename\n  }\n}',
+    }
+
+    response = requests.post('https://injective.talis.art/api/graphql', headers=headers, json=json_data)
+
+
+    print(response)
