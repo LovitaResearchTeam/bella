@@ -113,7 +113,6 @@ async def get_collection_stats_msg():
 
 
 if __name__ == "__main__":
-    asyncio.run(tcli.send_message("Bella Is Up"))
     app = Application.builder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler('start', start_cmd))
     app.add_handler(CommandHandler('rarityNinja', rarity_cmd))
