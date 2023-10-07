@@ -213,5 +213,5 @@ def get_getfamilies():
 
     response = requests.post('https://injective.talis.art/api/graphql', headers=headers, json=json_data)
 
-
+    print(response.content)
     return response.json()

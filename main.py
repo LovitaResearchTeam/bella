@@ -32,7 +32,6 @@ async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def families_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        print(get_getfamilies())
         name_vol_list = [(fam['name'], round(float(fam['volumeInLast7Days']) * 10**(-18), 2)) for fam in get_getfamilies()['data']['families']['families']]
         name_vol_list.sort(key=lambda x: -x[1])
         msg = "🌋 *Volumes* 🌋\n\n"
