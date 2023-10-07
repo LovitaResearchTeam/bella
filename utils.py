@@ -165,6 +165,9 @@ def fetch_rarities():
 
 def get_collection_data():
     url = 'https://injective.talis.art/api/graphql'
+    headers = {
+        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+    }
     data = {
         'operationName': 'GetCollectionStats',
         'variables': {
@@ -177,7 +180,7 @@ def get_collection_data():
         'query': 'query GetCollectionStats($input: CollectionStatsInput!) {\n  collectionStats(input: $input) {\n    ownerCount\n    tokenCount\n    floorPrice\n    ceilingPrice\n    volumeInLast7Days\n    doesCurrentUserOwnAllTokens\n    __typename\n  }\n}'
     }
 
-    response = requests.post(url, json=data)
+    response = requests.post(url, json=data, headers=headers)
     return response.json()['data']['collectionStats']
 
 
@@ -211,4 +214,4 @@ def get_getfamilies():
     response = requests.post('https://injective.talis.art/api/graphql', headers=headers, json=json_data)
 
 
-    print(response)
+    return response.json()
