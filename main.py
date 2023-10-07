@@ -109,6 +109,7 @@ async def get_collection_stats_msg():
         return msg
     except:
         await tcli.send_message("☢️ ERROR ☢️\n\n" + traceback.format_exc())
+        return ""
 
 
 
